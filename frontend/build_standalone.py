@@ -22,7 +22,7 @@ def inline() -> str:
         f"<style>\n{css}\n</style>",
     )
 
-    for src in ["js/mock-data.js", "js/api.js", "js/graph.js", "js/render.js", "js/app.js"]:
+    for src in ["js/mock-data.js", "js/mock-engine.js", "js/api.js", "js/graph.js", "js/render.js", "js/app.js"]:
         code = (HERE / src).read_text(encoding="utf-8")
         tag = f'<script src="{src}"></script>'
         assert tag in html, f"missing tag {tag}"
