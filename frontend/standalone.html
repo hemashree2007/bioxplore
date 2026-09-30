@@ -1,0 +1,1399 @@
+<!-- GENERATED FILE — edit the modular sources (index.html, css/, js/) and re-run build_standalone.py instead. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multidimensional Knowledge System</title>
+  <style>
+/* Multidimensional Knowledge System — frontend styles */
+
+:root {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --ink: #17203a;
+  --muted: #5b6478;
+  --line: #dfe5f0;
+  --brand: #4f46e5;
+  --brand-soft: #eef2ff;
+
+  --fact: #15803d;       --fact-bg: #ecfdf5;
+  --evidence: #1d4ed8;   --evidence-bg: #eff6ff;
+  --interp: #b45309;     --interp-bg: #fffbeb;
+  --analogy: #7c3aed;    --analogy-bg: #f5f3ff;
+  --hyp: #b91c1c;        --hyp-bg: #fef2f2;
+
+  --radius: 14px;
+  --shadow: 0 1px 3px rgba(23, 32, 58, 0.08), 0 8px 24px rgba(23, 32, 58, 0.06);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.55;
+}
+
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px; background: #ffffffcc; backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10;
+}
+.topbar h1 { font-size: 1.05rem; margin: 0; letter-spacing: 0.2px; }
+
+.container { max-width: 980px; margin: 0 auto; padding: 18px 16px 60px; }
+.footer { max-width: 980px; margin: 0 auto; padding: 18px 16px 40px; font-size: 0.8rem; }
+
+.card {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 16px 18px; margin: 14px 0;
+}
+.card h3 { margin: 4px 0 10px; font-size: 1rem; }
+
+.muted { color: var(--muted); }
+
+/* search */
+.search-row { display: flex; gap: 10px; }
+#query-input {
+  flex: 1; padding: 12px 14px; font-size: 1rem;
+  border: 1.5px solid var(--line); border-radius: 10px; outline: none;
+  transition: border-color 0.15s;
+}
+#query-input:focus { border-color: var(--brand); }
+.btn-primary {
+  padding: 12px 20px; border: none; border-radius: 10px; cursor: pointer;
+  background: var(--brand); color: white; font-weight: 600; font-size: 0.95rem;
+}
+.btn-primary:hover { filter: brightness(1.07); }
+.btn-secondary {
+  padding: 8px 16px; border: 1.5px solid var(--brand); border-radius: 8px;
+  background: transparent; color: var(--brand); cursor: pointer; font-weight: 600;
+}
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.chip {
+  display: inline-block; padding: 3px 10px; border-radius: 999px;
+  font-size: 0.78rem; border: 1px solid var(--line); background: #f8fafc;
+}
+.chip-example { cursor: pointer; background: var(--brand-soft); border-color: #d9ddfb; color: #3730a3; }
+.chip-example:hover { background: #e0e7ff; }
+.chip-domain { background: #ecfeff; border-color: #a5f3fc; color: #0e7490; font-weight: 600; }
+.chip-type { background: #fef9c3; border-color: #fde68a; color: #854d0e; font-weight: 600; }
+.chip-entity { background: #f0fdf4; border-color: #bbf7d0; color: #166534; }
+.chip-dim { background: var(--brand-soft); border-color: #d9ddfb; color: #3730a3; font-weight: 600; }
+.chip-muted { color: var(--muted); }
+
+/* evidence badges */
+.badge {
+  display: inline-block; padding: 2px 9px; border-radius: 6px;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.4px;
+}
+.badge-fact          { background: var(--fact-bg);    color: var(--fact);    border: 1px solid #a7f3d0; }
+.badge-evidence      { background: var(--evidence-bg);color: var(--evidence);border: 1px solid #bfdbfe; }
+.badge-interpretation{ background: var(--interp-bg);  color: var(--interp);  border: 1px solid #fde68a; }
+.badge-analogy       { background: var(--analogy-bg); color: var(--analogy); border: 1px solid #ddd6fe; }
+.badge-hypothesis    { background: var(--hyp-bg);     color: var(--hyp);     border: 1.5px solid #fecaca; }
+
+/* notice */
+.notice {
+  margin: 14px 0; padding: 12px 16px; border-radius: 10px;
+  background: #fff7ed; border: 1.5px solid #fdba74; color: #9a3412; font-weight: 600;
+}
+
+/* query header */
+.query-header .header-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0; }
+.header-label { min-width: 86px; font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* dimension panels */
+.panels { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 760px) { .panels { grid-template-columns: 1fr; } }
+
+.dimension-panel {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 14px 16px; margin: 0;
+  border-top: 4px solid var(--brand);
+}
+.panel-1D { border-top-color: #0ea5e9; }
+.panel-2D { border-top-color: #f59e0b; }
+.panel-3D { border-top-color: #7c3aed; }
+.panel-4D { border-top-color: #ef4444; }
+
+.panel-head { margin-bottom: 10px; }
+.panel-title { margin: 0; font-size: 0.98rem; }
+.panel-desc { margin: 2px 0 0; font-size: 0.78rem; color: var(--muted); }
+
+.item-card {
+  border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin: 10px 0;
+  background: #fcfdff;
+}
+.item-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.item-title { margin: 0; font-size: 0.9rem; }
+.item-content { margin: 8px 0 6px; font-size: 0.88rem; }
+.source-line { margin: 4px 0 0; font-size: 0.76rem; color: var(--muted); }
+.source-line a { color: var(--brand); text-decoration: none; }
+.source-line a:hover { text-decoration: underline; }
+
+.entity-chips, .verse-words { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.word-chip {
+  font-size: 0.72rem; padding: 2px 8px; border-radius: 999px;
+  background: #f1f5f9; border: 1px solid #e2e8f0; color: #334155;
+}
+
+/* relationships */
+.rel-list { list-style: none; margin: 10px 0 0; padding: 0; }
+.rel-item {
+  border-top: 1px dashed var(--line); padding: 8px 2px; font-size: 0.86rem;
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+}
+.rel-type { color: var(--brand); font-weight: 600; }
+
+.graph-box { margin: 6px 0 4px; }
+.graph-svg { width: 100%; height: auto; background: #fbfcff; border: 1px solid var(--line); border-radius: 10px; }
+
+/* comparison table */
+.comparison-panel {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 14px 16px; margin: 14px 0;
+}
+.comparison-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.comparison-table th, .comparison-table td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; }
+.comparison-table thead th { background: var(--brand-soft); color: #3730a3; }
+.comparison-table tbody th { background: #f8fafc; font-weight: 600; }
+
+/* Tamil verse card */
+.verse-card {
+  border: 1.5px solid #c7d2fe; border-radius: 12px; padding: 14px 16px;
+  margin: 10px 0; background: linear-gradient(180deg, #f8faff, #ffffff);
+}
+.verse-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; margin-bottom: 8px; }
+.verse-textname { font-weight: 800; color: #312e81; }
+.verse-number, .verse-chapter, .verse-author { font-size: 0.76rem; color: var(--muted); }
+
+.verse-original, .ta {
+  font-family: "Noto Serif Tamil", "Noto Sans Tamil", "Latha", "Akshar", serif;
+  font-size: 1.18rem; line-height: 1.9; color: #1e1b4b;
+  margin: 6px 0; word-break: keep-all;
+}
+.verse-transliteration { font-style: italic; color: var(--muted); font-size: 0.85rem; }
+.verse-translation, .verse-literal { font-size: 0.88rem; margin: 6px 0; }
+.verse-foot { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; border-top: 1px dashed var(--line); margin-top: 10px; padding-top: 8px; }
+
+/* states */
+.state-card { text-align: center; padding: 34px 20px; }
+.error-card { border-color: #fecaca; background: #fffafa; }
+.error-message { color: #991b1b; font-weight: 600; }
+.spinner {
+  width: 38px; height: 38px; margin: 0 auto 12px;
+  border: 4px solid var(--line); border-top-color: var(--brand);
+  border-radius: 50%; animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* sources */
+.sources-list { margin: 0; padding-left: 20px; }
+.sources-list li { margin: 6px 0; }
+
+@media (max-width: 560px) {
+  .search-row { flex-direction: column; }
+  .btn-primary { width: 100%; }
+  .header-label { min-width: 100%; }
+}
+
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <h1>Multidimensional Knowledge System</h1>
+    <span id="backend-badge" class="chip chip-muted">Backend: mock</span>
+  </header>
+
+  <main class="container">
+    <section class="card search-card" aria-label="Query input">
+      <div class="search-row">
+        <input
+          id="query-input"
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Enter a topic, keyword, concept, sentence, question, or cross-domain query..."
+          aria-label="Query input"
+        />
+        <button id="analyze-btn" class="btn-primary">Analyze</button>
+      </div>
+      <div id="example-chips" class="chip-row" aria-label="Example queries"></div>
+    </section>
+
+    <!-- cross-domain / Tamil-science persistent notice -->
+    <aside id="cross-domain-notice" class="notice" hidden>
+      ⚠ Conceptual relationships are not scientific evidence.
+    </aside>
+
+    <!-- IDLE / EMPTY STATE -->
+    <section id="state-idle" class="card state-card">
+      <h2>Explore knowledge across four dimensions</h2>
+      <p class="muted">
+        Enter any of: topic · keyword · concept · sentence · question · comparison ·
+        relationship · temporal · cross-domain · multidimensional query.
+        Or pick an example above.
+      </p>
+    </section>
+
+    <!-- LOADING -->
+    <section id="state-loading" class="card state-card" hidden>
+      <div class="spinner" aria-hidden="true"></div>
+      <p class="muted">Analyzing query and retrieving knowledge…</p>
+    </section>
+
+    <!-- ERROR -->
+    <section id="state-error" class="card state-card error-card" hidden>
+      <h2><span id="error-code" class="badge badge-hypothesis">ERROR</span></h2>
+      <p id="error-message" class="error-message"></p>
+      <button id="error-retry" class="btn-secondary">Try again</button>
+    </section>
+
+    <!-- RESULT -->
+    <div id="state-result" hidden>
+      <section id="query-header" class="card"></section>
+      <section id="dimension-panels" class="panels"></section>
+      <div id="comparison-box"></div>
+
+      <section class="card">
+        <h3>Sources / References</h3>
+        <ol id="sources-list" class="sources-list"></ol>
+      </section>
+
+      <section class="card" id="warnings-card">
+        <h3>Warnings</h3>
+        <ul id="warnings-list"></ul>
+      </section>
+
+      <section class="card" id="notfound-card">
+        <h3>Not found in knowledge base</h3>
+        <ul id="notfound-list"></ul>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer muted">
+    Multidimensional Knowledge System — research prototype. Evidence labels:
+    FACT · EVIDENCE · INTERPRETATION · ANALOGY · HYPOTHESIS.
+  </footer>
+
+  <script>
+/* MOCK data for the Multidimensional Knowledge System frontend.
+ *
+ * All four cases mirror Part A's /query envelope EXACTLY:
+ * { query, answer: { summary, sections[], relationships[], comparison_table }, sources[], warnings[], not_found[] }
+ * Section items: { id, title, content, evidence_label, source, entities }
+ * Relationship: { from_entity, to_entity, relation, dimension, evidence_label, source }
+ * Source: { title, reference, text_name, verse_number, chapter, author }
+ *
+ * Labels use the enum value HYPOTHESIS (there is no HYPOTHETICAL tag).
+ * The Tamil verse here is synthetic MOCK text, clearly marked.
+ */
+
+const MOCK_CASES = {
+  "Black hole vs white hole": {
+    meta: { mock: true, case: "single-domain science (comparison)" },
+    query: {
+      raw_query: "Black hole vs white hole",
+      normalized_query: "black hole vs white hole",
+      input_type: "comparison",
+      input_type_confidence: 0.95,
+      secondary_types: ["relationship"],
+      intent: "compare",
+      domains: [{ domain: "astronomy", score: 0.97 }],
+      entities: [
+        { text: "black hole", normalized_name: "black hole", domain: "astronomy", entity_type: "object", side: "A" },
+        { text: "white hole", normalized_name: "white hole", domain: "astronomy", entity_type: "object", side: "B" },
+      ],
+      dimensions: ["1D", "3D", "4D"],
+      dimension_reasons: {
+        "1D": "literal definitions requested",
+        "3D": "comparison implies relationship analysis",
+        "4D": "white holes are hypothetical objects",
+      },
+      options: { max_items: 20 },
+      language: "en",
+      warnings: [],
+    },
+    answer: {
+      summary:
+        "Compared 3 item(s) in domain astronomy across dimensions 1D, 3D, 4D. Black holes are observationally established; white holes are a time-reversed mathematical solution with no observational evidence.",
+      sections: [
+        {
+          dimension: "1D",
+          title: "Text / Literal",
+          items: [
+            {
+              id: "astro_black_hole_def",
+              title: "Black hole (definition)",
+              content:
+                "A region of spacetime where gravity is so strong that nothing — not even light — escapes once inside the event horizon.",
+              evidence_label: "FACT",
+              source: {
+                title: "NASA Science — Black Holes",
+                reference: "science.nasa.gov/universe/black-holes",
+                text_name: null, verse_number: null, chapter: null, author: null,
+              },
+              entities: ["black hole", "event horizon", "spacetime"],
+              side: "A",
+            },
+            {
+              id: "astro_white_hole_def",
+              title: "White hole (definition; hypothetical)",
+              content:
+                "The time-reverse of a black hole: a region nothing can enter, from which matter and light can only emerge. It appears as a mathematical solution of general relativity but there is no observational evidence that white holes exist.",
+              evidence_label: "HYPOTHESIS",
+              source: {
+                title: "Hawking & Ellis 1973, The Large Scale Structure of Space-Time, sec. 5.6",
+                reference: "ISBN 978-0-521-09906-6",
+                text_name: null, verse_number: null, chapter: null, author: null,
+              },
+              entities: ["white hole", "event horizon"],
+              side: "B",
+            },
+          ],
+        },
+        {
+          dimension: "3D",
+          title: "Symbol / Concept / Relationship",
+          items: [],
+          relationships_note: "see relationships[] below",
+        },
+        {
+          dimension: "4D",
+          title: "Future / Hypothetical / Temporal",
+          items: [
+            {
+              id: "astro_white_hole_4d",
+              title: "White holes as speculative endpoints",
+              content:
+                "Some cosmological speculations imagine white holes as the far end of evaporating black holes or as relics of the early universe; all such scenarios are untested.",
+              evidence_label: "HYPOTHESIS",
+              source: {
+                title: "Hawking & Ellis 1973; modern review essays on white-hole conjectures",
+                reference: "ISBN 978-0-521-09906-6",
+                text_name: null, verse_number: null, chapter: null, author: null,
+              },
+              entities: ["white hole", "black hole evaporation"],
+            },
+          ],
+        },
+      ],
+      relationships: [
+        {
+          from_entity: "white hole",
+          to_entity: "black hole",
+          relation: "time_reverse_of",
+          dimension: "3D",
+          evidence_label: "HYPOTHESIS",
+          source: {
+            title: "Hawking & Ellis 1973, The Large Scale Structure of Space-Time",
+            reference: "ISBN 978-0-521-09906-6",
+            text_name: null, verse_number: null, chapter: null, author: null,
+          },
+        },
+      ],
+      comparison_table: {
+        columns: ["Property", "Black hole (A)", "White hole (B)"],
+        rows: [
+          ["Nothing escapes / nothing enters", "Nothing escapes past event horizon", "Nothing can enter"],
+          ["Observational status", "Established (EHT 2019 image of M87*)", "No observational evidence"],
+          ["Evidence label", "FACT", "HYPOTHESIS"],
+        ],
+      },
+    },
+    sources: [
+      { title: "NASA Science — Black Holes", reference: "science.nasa.gov/universe/black-holes", text_name: null, verse_number: null, chapter: null, author: null },
+      { title: "Hawking & Ellis 1973, The Large Scale Structure of Space-Time", reference: "ISBN 978-0-521-09906-6", text_name: null, verse_number: null, chapter: null, author: null },
+    ],
+    warnings: [],
+    not_found: [],
+  },
+
+  "What does Thirukkural say about water?": {
+    meta: { mock: true, case: "Tamil verse query" },
+    query: {
+      raw_query: "What does Thirukkural say about water?",
+      normalized_query: "what does thirukkural say about water?",
+      input_type: "question",
+      input_type_confidence: 0.85,
+      secondary_types: ["concept"],
+      intent: "interpret_meaning",
+      domains: [{ domain: "tamil", score: 0.96 }],
+      entities: [
+        { text: "thirukkural", normalized_name: "thirukkural", domain: "tamil", entity_type: "text_source", side: null },
+        { text: "water", normalized_name: "water", domain: "tamil", entity_type: "theme", side: null },
+      ],
+      dimensions: ["1D", "2D"],
+      dimension_reasons: {
+        "1D": "original verse, words, literal meaning",
+        "2D": "literary/philosophical context requested",
+      },
+      options: { max_items: 20 },
+      language: "mixed",
+      warnings: [],
+    },
+    answer: {
+      summary:
+        "One verified verse on water from the Thirukkural with literary context. The verse is a moral reflection on rain and worldly order — it is not a scientific claim.",
+      sections: [
+        {
+          dimension: "1D",
+          title: "Text / Literal",
+          items: [
+            {
+              id: "ta_kural_mock_water",
+              title: "Thirukkural — verse on water (MOCK)",
+              content: "MOCK VERSE TEXT — replace with verified verse from a cited edition.",
+              evidence_label: "FACT",
+              source: {
+                title: "Thirukkural — MOCK record for frontend development",
+                reference: "edition to be cited when verified verse is added",
+                text_name: "Thirukkural",
+                verse_number: "000 (MOCK)",
+                chapter: "MOCK",
+                author: "Thiruvalluvar (attributed)",
+              },
+              entities: ["thirukkural", "water"],
+              is_verse: true,
+              verse: {
+                original: "மாதர் நட்பாண்மை மாக்கட் புணர்ச்சிது — MOCK TEXT",
+                transliteration: "MOCK TRANSLITERATION",
+                translation: "MOCK TRANSLATION — water sustains the world's order (placeholder).",
+                literal_meaning: "MOCK LITERAL MEANING (placeholder).",
+                words: ["நீர் (water)", "வானம் (sky)", "நிலம் (land)"],
+              },
+            },
+          ],
+        },
+        {
+          dimension: "2D",
+          title: "Interpretation / Context",
+          items: [
+            {
+              id: "ta_kural_mock_water_ctx",
+              title: "Literary and cultural context (MOCK)",
+              content:
+                "In the Thirukkural's moral architecture, rain is treated as the foundation of worldly order — agriculture, food and wealth all depend on it (MOCK contextual note for development).",
+              evidence_label: "INTERPRETATION",
+              source: {
+                title: "Thirukkural interpretive literature — MOCK record",
+                reference: "citation pending verified edition",
+                text_name: "Thirukkural",
+                verse_number: "000 (MOCK)",
+                chapter: "MOCK",
+                author: null,
+              },
+              entities: ["thirukkural", "water"],
+            },
+          ],
+        },
+      ],
+      relationships: [],
+      comparison_table: null,
+    },
+    sources: [
+      {
+        title: "Thirukkural — MOCK record for frontend development",
+        reference: "edition to be cited when verified verse is added",
+        text_name: "Thirukkural", verse_number: "000 (MOCK)", chapter: "MOCK",
+        author: "Thiruvalluvar (attributed)",
+      },
+    ],
+    warnings: [
+      "This is a MOCK frontend record. No verified Thirukkural verse is available yet — verses are added only after verification against a cited edition.",
+    ],
+    not_found: [],
+  },
+
+  "Can biological rhythms be compared conceptually with orbital periods?": {
+    meta: { mock: true, case: "cross-domain" },
+    query: {
+      raw_query: "Can biological rhythms be compared conceptually with orbital periods?",
+      normalized_query: "can biological rhythms be compared conceptually with orbital periods?",
+      input_type: "cross_domain",
+      input_type_confidence: 0.9,
+      secondary_types: ["comparison", "relationship"],
+      intent: "find_relationship",
+      domains: [
+        { domain: "biology", score: 0.82 },
+        { domain: "astronomy", score: 0.78 },
+      ],
+      entities: [
+        { text: "biological rhythms", normalized_name: "circadian rhythm", domain: "biology", entity_type: "process", side: "A" },
+        { text: "orbital periods", normalized_name: "orbital period", domain: "astronomy", entity_type: "concept", side: "B" },
+      ],
+      dimensions: ["1D", "3D", "4D"],
+      dimension_reasons: {
+        "1D": "literal facts of both domains",
+        "3D": "cross-domain relationship analysis",
+        "4D": "analogy/speculative framing",
+      },
+      options: { max_items: 20 },
+      language: "en",
+      warnings: [],
+    },
+    answer: {
+      summary:
+        "Both are periodic phenomena with a characteristic period — Keplerian orbits by T² = (4π²/GM)a³, circadian rhythms by an endogenous ~24 h molecular clock. The shared abstraction is a robust oscillator; the physics differs completely, so the mapping is a conceptual analogy, not evidence.",
+      sections: [
+        {
+          dimension: "1D",
+          title: "Text / Literal",
+          items: [
+            {
+              id: "bio_circadian_def",
+              title: "Circadian rhythm (definition)",
+              content:
+                "A biological process with a free-running period of about 24 hours, generated by an internal molecular clock and synchronized daily by light.",
+              evidence_label: "FACT",
+              source: {
+                title: "Dunlap, J. C. 1999, Cell 96, 271 (Molecular Bases for Circadian Clocks)",
+                reference: "doi:10.1016/S0092-8674(00)80466-8",
+                text_name: null, verse_number: null, chapter: null, author: null,
+              },
+              entities: ["circadian rhythm"],
+            },
+            {
+              id: "astro_kepler_laws",
+              title: "Kepler's laws (harmonic law)",
+              content: "The square of the orbital period is proportional to the cube of the semi-major axis: T² = (4π²/GM)a³.",
+              evidence_label: "FACT",
+              source: {
+                title: "Encyclopaedia Britannica, 'Kepler's laws of planetary motion'",
+                reference: "britannica.com/science/Keplers-laws-of-planetary-motion",
+                text_name: null, verse_number: null, chapter: null, author: null,
+              },
+              entities: ["kepler's laws", "orbital period"],
+            },
+          ],
+        },
+        {
+          dimension: "3D",
+          title: "Symbol / Concept / Relationship",
+          items: [],
+          relationships_note: "see relationships[] below",
+        },
+        {
+          dimension: "4D",
+          title: "Future / Hypothetical / Temporal",
+          items: [
+            {
+              id: "x_analogy_4d",
+              title: "Oscillators as a shared abstraction",
+              content:
+                "If one abstracts away mechanism, gravitational orbits and gene-regulatory clocks are both self-sustaining oscillators; researchers sometimes borrow intuition across them. This is an analogy for framing questions — not a physical correspondence.",
+              evidence_label: "ANALOGY",
+              source: {
+                title: "Cross-domain essay: Dunlap 1999; Britannica, Kepler's laws",
+                reference: "doi:10.1016/S0092-8674(00)80466-8",
+                text_name: null, verse_number: null, chapter: null, author: null,
+              },
+              entities: ["circadian rhythm", "orbital period"],
+            },
+          ],
+        },
+      ],
+      relationships: [
+        {
+          from_entity: "circadian rhythm",
+          to_entity: "orbital period",
+          relation: "conceptually_parallels",
+          dimension: "3D",
+          evidence_label: "ANALOGY",
+          source: {
+            title: "Cross-domain essay: Dunlap 1999, Cell 96, 271; Britannica, Kepler's laws",
+            reference: "doi:10.1016/S0092-8674(00)80466-8",
+            text_name: null, verse_number: null, chapter: null, author: null,
+          },
+        },
+        {
+          from_entity: "kepler's laws",
+          to_entity: "orbital period",
+          relation: "determines",
+          dimension: "3D",
+          evidence_label: "FACT",
+          source: {
+            title: "Encyclopaedia Britannica, 'Kepler's laws of planetary motion'",
+            reference: "britannica.com/science/Keplers-laws-of-planetary-motion",
+            text_name: null, verse_number: null, chapter: null, author: null,
+          },
+        },
+        {
+          from_entity: "gene expression",
+          to_entity: "circadian rhythm",
+          relation: "generates",
+          dimension: "3D",
+          evidence_label: "FACT",
+          source: {
+            title: "Dunlap, J. C. 1999, Cell 96, 271",
+            reference: "doi:10.1016/S0092-8674(00)80466-8",
+            text_name: null, verse_number: null, chapter: null, author: null,
+          },
+        },
+      ],
+      comparison_table: null,
+    },
+    sources: [
+      { title: "Dunlap, J. C. 1999, Cell 96, 271", reference: "doi:10.1016/S0092-8674(00)80466-8", text_name: null, verse_number: null, chapter: null, author: null },
+      { title: "Encyclopaedia Britannica, 'Kepler's laws of planetary motion'", reference: "britannica.com/science/Keplers-laws-of-planetary-motion", text_name: null, verse_number: null, chapter: null, author: null },
+    ],
+    warnings: ["Conceptual relationships are not scientific evidence."],
+    not_found: [],
+  },
+
+  "How does a mutation affect DNA, protein structure, cellular function and disease progression?": {
+    meta: { mock: true, case: "multidimensional biology" },
+    query: {
+      raw_query: "How does a mutation affect DNA, protein structure, cellular function and disease progression?",
+      normalized_query: "how does a mutation affect dna, protein structure, cellular function and disease progression?",
+      input_type: "multidimensional",
+      input_type_confidence: 0.9,
+      secondary_types: ["relationship", "temporal"],
+      intent: "explain",
+      domains: [{ domain: "biology", score: 0.95 }],
+      entities: [
+        { text: "mutation", normalized_name: "mutation", domain: "biology", entity_type: "process", side: null },
+        { text: "dna", normalized_name: "dna", domain: "biology", entity_type: "concept", side: null },
+        { text: "protein structure", normalized_name: "protein folding", domain: "biology", entity_type: "process", side: null },
+        { text: "cellular function", normalized_name: "cell", domain: "biology", entity_type: "concept", side: null },
+        { text: "disease progression", normalized_name: "disease progression", domain: "biology", entity_type: "process", side: null },
+      ],
+      dimensions: ["1D", "2D", "3D", "4D"],
+      dimension_reasons: {
+        "1D": "definitions of each layer",
+        "2D": "mechanism linking sequence to structure to function",
+        "3D": "causal chain between entities",
+        "4D": "disease progression over time",
+      },
+      options: { max_items: 20 },
+      language: "en",
+      warnings: [],
+    },
+    answer: {
+      summary:
+        "A disease-relevant mutation changes DNA sequence, which can destabilize the encoded protein's folded structure, altering cellular function and initiating a clinical trajectory that unfolds over years.",
+      sections: [
+        {
+          dimension: "1D",
+          title: "Text / Literal",
+          items: [
+            {
+              id: "bio_mutation_def",
+              title: "Mutation (definition)",
+              content: "A change in the DNA sequence: point mutations (missense, nonsense, silent), insertions/deletions, duplications, inversions and chromosomal rearrangements.",
+              evidence_label: "FACT",
+              source: {
+                title: "Alberts, B. et al., Molecular Biology of the Cell, 6th ed., ch. 5",
+                reference: "ISBN 978-0-8153-4432-2",
+                text_name: null, verse_number: null, chapter: null, author: null,
+              },
+              entities: ["mutation", "dna"],
+            },
+          ],
+        },
+        {
+          dimension: "2D",
+          title: "Interpretation / Context",
+          items: [
+            {
+              id: "bio_mutation_mech",
+              title: "Mechanism: sequence → structure → function",
+              content:
+                "A coding mutation changes the amino-acid sequence; because function depends on the folded 3D structure, substitutions or frameshifts can destabilize folding, abolish active sites, or remove stop codons. Loss of a channel or enzyme changes cellular behaviour (e.g. CFTR mutations in cystic fibrosis).",
+              evidence_label: "EVIDENCE",
+              source: {
+                title: "Riordan, J. R. et al. 1989, Science 245, 1066 (CFTR)",
+                reference: "doi:10.1126/science.2475911",
+                text_name: null, verse_number: null, chapter: null, author: null,
+              },
+              entities: ["mutation", "protein folding", "cell"],
+            },
+          ],
+        },
+        {
+          dimension: "3D",
+          title: "Symbol / Concept / Relationship",
+          items: [],
+          relationships_note: "see relationships[] below",
+        },
+        {
+          dimension: "4D",
+          title: "Future / Hypothetical / Temporal",
+          items: [
+            {
+              id: "bio_disease_temporal",
+              title: "Mutation to disease trajectory over time",
+              content:
+                "The chain is causal but rates vary: DNA change → altered protein → changed cell function → tissue dysfunction → clinical progression over years (as in cystic fibrosis or Huntington's, where repeat length sets age of onset).",
+              evidence_label: "EVIDENCE",
+              source: {
+                title: "Tabrizi, S. J. et al. 2020, Lancet Neurology (TRACK-HD)",
+                reference: "doi:10.1016/S1474-4422(19)30402-6",
+                text_name: null, verse_number: null, chapter: null, author: null,
+              },
+              entities: ["mutation", "disease progression"],
+            },
+          ],
+        },
+      ],
+      relationships: [
+        { from_entity: "mutation", to_entity: "dna", relation: "alters", dimension: "3D", evidence_label: "FACT", source: { title: "Alberts et al., MBoCell 6th ed. ch. 5", reference: "ISBN 978-0-8153-4432-2", text_name: null, verse_number: null, chapter: null, author: null } },
+        { from_entity: "dna", to_entity: "protein folding", relation: "encodes", dimension: "3D", evidence_label: "FACT", source: { title: "Anfinsen 1973, Science 181, 223", reference: "doi:10.1126/science.181.4096.223", text_name: null, verse_number: null, chapter: null, author: null } },
+        { from_entity: "protein folding", to_entity: "cell", relation: "determines_function_of", dimension: "3D", evidence_label: "FACT", source: { title: "Alberts et al., MBoCell 6th ed. ch. 3", reference: "ISBN 978-0-8153-4432-2", text_name: null, verse_number: null, chapter: null, author: null } },
+        { from_entity: "cell", to_entity: "disease progression", relation: "dysfunction_drives", dimension: "3D", evidence_label: "EVIDENCE", source: { title: "Fearon & Vogelstein 1990, Cell 61, 759", reference: "doi:10.1016/0092-8674(90)90186-U", text_name: null, verse_number: null, chapter: null, author: null } },
+      ],
+      comparison_table: null,
+    },
+    sources: [
+      { title: "Alberts, B. et al., Molecular Biology of the Cell, 6th ed.", reference: "ISBN 978-0-8153-4432-2", text_name: null, verse_number: null, chapter: null, author: null },
+      { title: "Riordan, J. R. et al. 1989, Science 245, 1066 (CFTR)", reference: "doi:10.1126/science.2475911", text_name: null, verse_number: null, chapter: null, author: null },
+      { title: "Anfinsen 1973, Science 181, 223", reference: "doi:10.1126/science.181.4096.223", text_name: null, verse_number: null, chapter: null, author: null },
+      { title: "Fearon & Vogelstein 1990, Cell 61, 759", reference: "doi:10.1016/0092-8674(90)90186-U", text_name: null, verse_number: null, chapter: null, author: null },
+      { title: "Tabrizi, S. J. et al. 2020, Lancet Neurology (TRACK-HD)", reference: "doi:10.1016/S1474-4422(19)30402-6", text_name: null, verse_number: null, chapter: null, author: null },
+    ],
+    warnings: [],
+    not_found: [],
+  },
+};
+
+if (typeof module !== "undefined") module.exports = { MOCK_CASES };
+
+</script>
+  <script>window.MKS_CONFIG = { backend: "mock", endpoint: "http://127.0.0.1:8001/query" };</script>
+  <script>
+/* API layer — the single place that knows where answers come from.
+ *
+ * MOCK MODE (default): answers come from js/mock-data.js (exact backend schema).
+ * LIVE MODE: POST {query, options} to Part A's /query and return its JSON.
+ *
+ * Switch: set window.MKS_CONFIG = { backend: "live", endpoint: "http://127.0.0.1:8001/query" }
+ * before js/api.js loads, or just edit DEFAULT_CONFIG below (one line).
+ */
+
+const DEFAULT_CONFIG = {
+  backend: "mock", // "mock" | "live"
+  endpoint: "http://127.0.0.1:8001/query", // Part A: POST /query
+  timeoutMs: 15000,
+};
+
+const CONFIG = Object.assign({}, DEFAULT_CONFIG, window.MKS_CONFIG || {});
+
+const EXAMPLE_QUERIES = [
+  "Black holes",
+  "Plasma oscillation",
+  "Radiation laws",
+  "Kepler's laws",
+  "Gene expression",
+  "Thirukkural",
+  "Nature in Tholkappiyam",
+  "Black hole vs white hole",
+  "Can biological rhythms be compared conceptually with orbital periods?",
+];
+
+function normalizeError(raw) {
+  // Backend error contract: {"error": {"code": ..., "message": ...}}
+  if (raw && raw.error && raw.error.code) {
+    return { code: raw.error.code, message: raw.error.message || "Request failed." };
+  }
+  return { code: "NETWORK_ERROR", message: (raw && raw.message) || "Could not reach the backend." };
+}
+
+async function fetchAnswer(query, options) {
+  if (CONFIG.backend === "live") {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), CONFIG.timeoutMs);
+    try {
+      const resp = await fetch(CONFIG.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query, options: options || {} }),
+        signal: controller.signal,
+      });
+      const body = await resp.json().catch(() => null);
+      if (!resp.ok) throw normalizeError(body);
+      if (body && body.error) throw normalizeError(body); // NO_DOMAIN_MATCH etc.
+      return body;
+    } catch (err) {
+      if (err instanceof TypeError) throw normalizeError(null); // fetch/network
+      throw err;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  // MOCK mode: exact-match against mock cases, else closest case for demoing.
+  const trimmed = (query || "").trim();
+  if (!trimmed) {
+    throw { code: "EMPTY_QUERY", message: "Query is empty." };
+  }
+  const direct = MOCK_CASES[trimmed];
+  if (direct) {
+    await new Promise((r) => setTimeout(r, 450)); // simulate latency
+    return JSON.parse(JSON.stringify(direct));
+  }
+
+  // route by keywords so any input still shows a realistic result
+  const t = trimmed.toLowerCase();
+  let chosen = null;
+  if (/(tamil|kural|tholkappiyam|தமிழ்|குறள்)/.test(t)) {
+    chosen = MOCK_CASES["What does Thirukkural say about water?"];
+  } else if (/(rhythm|period)/.test(t) && /(rhythm|biological)/.test(t)) {
+    chosen = MOCK_CASES["Can biological rhythms be compared conceptually with orbital periods?"];
+  } else if (/(mutation|dna|protein)/.test(t)) {
+    chosen = MOCK_CASES[
+      "How does a mutation affect DNA, protein structure, cellular function and disease progression?"
+    ];
+  } else if (/(black hole|white hole|black holes)/.test(t)) {
+    chosen = MOCK_CASES["Black hole vs white hole"];
+  }
+  if (chosen) {
+    await new Promise((r) => setTimeout(r, 450));
+    const copy = JSON.parse(JSON.stringify(chosen));
+    copy.query.raw_query = trimmed;
+    return copy;
+  }
+
+  // nothing matches: simulate the backend's NO_DOMAIN_MATCH
+  await new Promise((r) => setTimeout(r, 300));
+  throw { code: "NO_DOMAIN_MATCH", message: "No supported domain matched this query." };
+}
+
+window.MKS_API = { fetchAnswer, EXAMPLE_QUERIES, CONFIG };
+
+if (typeof module !== "undefined") module.exports = { fetchAnswer, EXAMPLE_QUERIES, CONFIG };
+
+</script>
+  <script>
+/* Tiny dependency-free SVG node-link graph for the 3D panel.
+ * Deterministic circle layout (no physics jitter), edge labels with
+ * relation + evidence level, colour-coded by label.
+ */
+
+(function () {
+  const LABEL_COLORS = {
+    FACT: "#15803d",
+    EVIDENCE: "#1d4ed8",
+    INTERPRETATION: "#b45309",
+    ANALOGY: "#7c3aed",
+    HYPOTHESIS: "#b91c1c",
+  };
+
+  function uniqueNodes(links) {
+    const nodes = [];
+    const seen = new Map();
+    for (const l of links) {
+      for (const name of [l.from_entity, l.to_entity]) {
+        if (!seen.has(name)) {
+          seen.set(name, nodes.length);
+          nodes.push({ id: name, label: name });
+        }
+      }
+    }
+    return nodes;
+  }
+
+  function circleLayout(nodes, width, height, radius) {
+    const cx = width / 2;
+    const cy = height / 2;
+    const n = nodes.length;
+    if (n === 1) {
+      nodes[0].x = cx;
+      nodes[0].y = cy;
+      return;
+    }
+    nodes.forEach((node, i) => {
+      const angle = (2 * Math.PI * i) / n - Math.PI / 2;
+      node.x = cx + radius * Math.cos(angle);
+      node.y = cy + radius * Math.sin(angle);
+    });
+  }
+
+  function shorten(text, max) {
+    return text.length > max ? text.slice(0, max - 1) + "…" : text;
+  }
+
+  /** Render links into container element. links: [{from_entity,to_entity,relation,evidence_label}] */
+  function renderGraph(container, links) {
+    if (!links.length) {
+      container.innerHTML = '<p class="muted">No relationships for this query.</p>';
+      return;
+    }
+    const width = Math.max(320, container.clientWidth || 560);
+    const height = Math.max(240, Math.min(420, 140 + links.length * 40));
+    const radius = Math.min(width, height) * 0.32;
+
+    const nodes = uniqueNodes(links);
+    circleLayout(nodes, width, height, radius);
+
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", "Relationship graph");
+    svg.classList.add("graph-svg");
+
+    // edges
+    links.forEach((link, idx) => {
+      const a = nodes.find((n) => n.id === link.from_entity);
+      const b = nodes.find((n) => n.id === link.to_entity);
+      if (!a || !b) return;
+      const color = LABEL_COLORS[link.evidence_label] || "#64748b";
+
+      const line = document.createElementNS(NS, "line");
+      line.setAttribute("x1", a.x); line.setAttribute("y1", a.y);
+      line.setAttribute("x2", b.x); line.setAttribute("y2", b.y);
+      line.setAttribute("stroke", color);
+      line.setAttribute("stroke-width", "1.6");
+      line.setAttribute("stroke-dasharray", link.evidence_label === "ANALOGY" || link.evidence_label === "HYPOTHESIS" ? "6 4" : "");
+      svg.appendChild(line);
+
+      const mx = (a.x + b.x) / 2;
+      const my = (a.y + b.y) / 2;
+      const g = document.createElementNS(NS, "g");
+
+      const rect = document.createElementNS(NS, "rect");
+      const label = `${shorten(link.relation, 18)} · ${link.evidence_label}`;
+      rect.setAttribute("x", mx - label.length * 3.1 - 4);
+      rect.setAttribute("y", my - 9);
+      rect.setAttribute("width", label.length * 6.2 + 8);
+      rect.setAttribute("height", 18);
+      rect.setAttribute("rx", 4);
+      rect.setAttribute("fill", "#ffffff");
+      rect.setAttribute("stroke", color);
+      rect.setAttribute("stroke-width", "0.8");
+      rect.setAttribute("opacity", "0.95");
+      g.appendChild(rect);
+
+      const text = document.createElementNS(NS, "text");
+      text.setAttribute("x", mx);
+      text.setAttribute("y", my + 4);
+      text.setAttribute("text-anchor", "middle");
+      text.setAttribute("font-size", "10");
+      text.setAttribute("fill", color);
+      text.textContent = label;
+      g.appendChild(text);
+      svg.appendChild(g);
+    });
+
+    // nodes
+    nodes.forEach((node) => {
+      const g = document.createElementNS(NS, "g");
+      const circle = document.createElementNS(NS, "circle");
+      circle.setAttribute("cx", node.x);
+      circle.setAttribute("cy", node.y);
+      circle.setAttribute("r", 22);
+      circle.setAttribute("fill", "#eef2ff");
+      circle.setAttribute("stroke", "#4f46e5");
+      circle.setAttribute("stroke-width", "1.4");
+      g.appendChild(circle);
+
+      const text = document.createElementNS(NS, "text");
+      text.setAttribute("x", node.x);
+      text.setAttribute("y", node.y + 4);
+      text.setAttribute("text-anchor", "middle");
+      text.setAttribute("font-size", "9.5");
+      text.setAttribute("fill", "#1e1b4b");
+      text.textContent = shorten(node.label, 12);
+      text.setAttribute("title", node.label);
+      g.appendChild(text);
+      svg.appendChild(g);
+    });
+
+    container.innerHTML = "";
+    container.appendChild(svg);
+  }
+
+  window.MKS_GRAPH = { renderGraph, LABEL_COLORS };
+})();
+
+</script>
+  <script>
+/* Renderers — pure DOM builders for each part of the answer envelope. */
+
+(function () {
+  const DIMENSION_META = {
+    "1D": { title: "1D — Text / Literal", desc: "definitions, equations, measurements, verses" },
+    "2D": { title: "2D — Interpretation / Context", desc: "mechanisms, conditions, literary context" },
+    "3D": { title: "3D — Symbol / Concept / Relationship", desc: "entity → entity, cause → effect, concept ↔ concept" },
+    "4D": { title: "4D — Future / Hypothetical / Temporal", desc: "change over time, progression, analogy, speculation" },
+  };
+
+  const BADGE_CLASS = {
+    FACT: "badge-fact",
+    EVIDENCE: "badge-evidence",
+    INTERPRETATION: "badge-interpretation",
+    ANALOGY: "badge-analogy",
+    HYPOTHESIS: "badge-hypothesis",
+  };
+
+  function el(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined && text !== null) node.textContent = text;
+    return node;
+  }
+
+  function badge(label) {
+    const span = el("span", `badge ${BADGE_CLASS[label] || "badge-interpretation"}`);
+    span.textContent = label;
+    span.title = `Evidence level: ${label}`;
+    return span;
+  }
+
+  function sourceLine(source) {
+    const parts = [];
+    if (source.text_name) parts.push(`${source.text_name}`);
+    if (source.verse_number) parts.push(`verse ${source.verse_number}`);
+    if (source.chapter) parts.push(`ch. ${source.chapter}`);
+    if (source.author) parts.push(source.author);
+    const ref = source.reference || "";
+    const line = parts.length ? `${source.title} — ${parts.join(", ")}` : source.title;
+    const p = el("p", "source-line");
+    if (ref) {
+      const a = document.createElement("a");
+      a.href = /^https?:\/\//.test(ref) ? ref : `https://${ref}`;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = line;
+      p.appendChild(a);
+    } else {
+      p.textContent = line;
+    }
+    return p;
+  }
+
+  function verseCard(item) {
+    const card = el("article", "verse-card");
+    const v = item.verse || {};
+
+    const head = el("header", "verse-head");
+    head.appendChild(el("span", "verse-textname", item.source.text_name || "Tamil text"));
+    if (item.source.verse_number) head.appendChild(el("span", "verse-number", `வரி ${item.source.verse_number}`));
+    if (item.source.chapter) head.appendChild(el("span", "verse-chapter", `அதிகாரம் ${item.source.chapter}`));
+    if (item.source.author) head.appendChild(el("span", "verse-author", item.source.author));
+    card.appendChild(head);
+
+    const original = el("p", "verse-original ta", v.original || item.content);
+    original.setAttribute("lang", "ta");
+    card.appendChild(original);
+
+    if (v.transliteration) card.appendChild(el("p", "verse-transliteration", v.transliteration));
+    if (v.translation) {
+      const t = el("p", "verse-translation");
+      t.append(el("strong", null, "Translation: "), document.createTextNode(v.translation));
+      card.appendChild(t);
+    }
+    if (v.literal_meaning) {
+      const lm = el("p", "verse-literal");
+      lm.append(el("strong", null, "Literal meaning: "), document.createTextNode(v.literal_meaning));
+      card.appendChild(lm);
+    }
+    if (Array.isArray(v.words) && v.words.length) {
+      const words = el("p", "verse-words");
+      v.words.forEach((w) => words.appendChild(el("span", "word-chip", w)));
+      card.appendChild(words);
+    }
+
+    // Never display a verse without source info.
+    const hasSource = item.source && (item.source.text_name || item.source.verse_number);
+    const foot = el("footer", "verse-foot");
+    foot.appendChild(badge(item.evidence_label));
+    if (hasSource) {
+      foot.appendChild(sourceLine(item.source));
+    } else {
+      foot.appendChild(el("span", "badge badge-hypothesis", "SOURCE MISSING — verse withheld"));
+    }
+    card.appendChild(foot);
+    return card;
+  }
+
+  function itemCard(item) {
+    if (item.is_verse || item.verse) return verseCard(item);
+    const card = el("article", "item-card");
+    const head = el("header", "item-head");
+    head.appendChild(badge(item.evidence_label));
+    head.appendChild(el("h4", "item-title", item.title));
+    card.appendChild(head);
+    card.appendChild(el("p", "item-content", item.content));
+    if (item.entities && item.entities.length) {
+      const chips = el("div", "entity-chips");
+      item.entities.forEach((e) => chips.appendChild(el("span", "word-chip", e)));
+      card.appendChild(chips);
+    }
+    if (item.source && item.source.title) card.appendChild(sourceLine(item.source));
+    return card;
+  }
+
+  function relationshipList(rels) {
+    const list = el("ul", "rel-list");
+    rels.forEach((r) => {
+      const li = el("li", "rel-item");
+      li.appendChild(badge(r.evidence_label));
+      li.append(
+        document.createTextNode(" ")
+      );
+      const strong = el("strong", null, r.from_entity);
+      const em = el("em", "rel-type", ` ${r.relation} `);
+      li.append(strong, em, el("strong", null, r.to_entity));
+      if (r.source && r.source.title) li.appendChild(sourceLine(r.source));
+      list.appendChild(li);
+    });
+    return list;
+  }
+
+  function renderHeader(answer, container) {
+    container.innerHTML = "";
+    const q = answer.query || {};
+    const wrap = el("section", "query-header");
+
+    const doms = el("div", "header-row");
+    doms.appendChild(el("span", "header-label", "Domains"));
+    (q.domains || []).forEach((d) => doms.appendChild(el("span", "chip chip-domain", d.domain)));
+    wrap.appendChild(doms);
+
+    const types = el("div", "header-row");
+    types.appendChild(el("span", "header-label", "Input type"));
+    types.appendChild(el("span", "chip chip-type", q.input_type || "unknown"));
+    if (typeof q.input_type_confidence === "number") {
+      types.appendChild(el("span", "chip chip-muted", `confidence ${q.input_type_confidence.toFixed(2)}`));
+    }
+    (q.secondary_types || []).forEach((t) => types.appendChild(el("span", "chip chip-muted", `also: ${t}`)));
+    wrap.appendChild(types);
+
+    if ((q.entities || []).length) {
+      const ents = el("div", "header-row");
+      ents.appendChild(el("span", "header-label", "Entities"));
+      q.entities.forEach((e) => {
+        const chip = el("span", "chip chip-entity");
+        chip.textContent = e.side ? `${e.text} (${e.side})` : e.text;
+        chip.title = `${e.normalized_name} · ${e.domain} · ${e.entity_type}`;
+        ents.appendChild(chip);
+      });
+      wrap.appendChild(ents);
+    }
+
+    if (q.dimensions && q.dimensions.length) {
+      const dims = el("div", "header-row");
+      dims.appendChild(el("span", "header-label", "Dimensions"));
+      q.dimensions.forEach((d) => dims.appendChild(el("span", "chip chip-dim", DIMENSION_META[d] ? DIMENSION_META[d].title.split("—")[0].trim() : d)));
+      wrap.appendChild(dims);
+    }
+
+    container.appendChild(wrap);
+  }
+
+  function renderSections(answer, container) {
+    container.innerHTML = "";
+    const sectionEls = [];
+
+    for (const section of answer.answer.sections || []) {
+      const meta = DIMENSION_META[section.dimension] || { title: section.dimension, desc: "" };
+      const panel = el("section", "dimension-panel");
+      panel.classList.add(`panel-${section.dimension}`);
+
+      const head = el("header", "panel-head");
+      head.appendChild(el("h3", "panel-title", meta.title));
+      head.appendChild(el("p", "panel-desc", meta.desc));
+      panel.appendChild(head);
+
+      // 3D: graph + list from relationships[]
+      if (section.dimension === "3D") {
+        const rels = (answer.answer.relationships || []).filter((r) => r.dimension === "3D" || true);
+        const graphBox = el("div", "graph-box");
+        panel.appendChild(graphBox);
+        window.MKS_GRAPH.renderGraph(graphBox, rels);
+        panel.appendChild(relationshipList(rels));
+        sectionEls.push(panel);
+        continue;
+      }
+
+      const items = section.items || [];
+      if (!items.length) continue; // never render empty panels
+      items.forEach((item) => panel.appendChild(itemCard(item)));
+      sectionEls.push(panel);
+    }
+
+    sectionEls.forEach((p) => container.appendChild(p));
+  }
+
+  function renderComparison(table, container) {
+    if (!table || !table.rows) return;
+    container.innerHTML = "";
+    const wrap = el("section", "comparison-panel");
+    wrap.appendChild(el("h3", "panel-title", "Comparison"));
+    const tableEl = el("table", "comparison-table");
+    const thead = el("thead");
+    const headRow = el("tr");
+    (table.columns || []).forEach((c) => headRow.appendChild(el("th", null, c)));
+    thead.appendChild(headRow);
+    tableEl.appendChild(thead);
+    const tbody = el("tbody");
+    (table.rows || []).forEach((row) => {
+      const tr = el("tr");
+      row.forEach((cell, i) => tr.appendChild(el(i === 0 ? "th" : "td", null, cell)));
+      tbody.appendChild(tr);
+    });
+    tableEl.appendChild(tbody);
+    wrap.appendChild(tableEl);
+    container.appendChild(wrap);
+  }
+
+  function renderSources(sources, container) {
+    container.innerHTML = "";
+    if (!sources || !sources.length) {
+      container.appendChild(el("p", "muted", "No sources returned."));
+      return;
+    }
+    const ol = el("ol", "sources-list");
+    sources.forEach((s) => {
+      const li = el("li");
+      li.appendChild(sourceLine(s));
+      ol.appendChild(li);
+    });
+    container.appendChild(ol);
+  }
+
+  function renderWarnings(warnings, container) {
+    container.innerHTML = "";
+    if (!warnings || !warnings.length) {
+      container.closest(".card").hidden = true;
+      return;
+    }
+    container.closest(".card").hidden = false;
+    warnings.forEach((w) => container.appendChild(el("li", null, w)));
+  }
+
+  function renderNotFound(items, container) {
+    container.innerHTML = "";
+    if (!items || !items.length) {
+      container.closest(".card").hidden = true;
+      return;
+    }
+    container.closest(".card").hidden = false;
+    items.forEach((n) => container.appendChild(el("li", null, n)));
+  }
+
+  window.MKS_RENDER = {
+    renderHeader,
+    renderSections,
+    renderComparison,
+    renderSources,
+    renderWarnings,
+    renderNotFound,
+    badge,
+    DIMENSION_META,
+  };
+})();
+
+</script>
+  <script>
+/* App state machine: idle → loading → result | error (EMPTY, NO_DOMAIN_MATCH, network…). */
+
+(function () {
+  const { fetchAnswer, EXAMPLE_QUERIES } = window.MKS_API;
+  const R = window.MKS_RENDER;
+
+  const $ = (id) => document.getElementById(id);
+  const stateEls = {
+    idle: $("state-idle"),
+    loading: $("state-loading"),
+    error: $("state-error"),
+    result: $("state-result"),
+  };
+
+  function showState(name) {
+    Object.entries(stateEls).forEach(([key, el]) => {
+      el.hidden = key !== name;
+    });
+  }
+
+  function setError(code, message) {
+    $("error-code").textContent = code;
+    $("error-message").textContent = message;
+    showState("error");
+  }
+
+  function isCrossDomain(answer) {
+    const q = answer.query || {};
+    const domains = q.domains || [];
+    const multiDomain = domains.length > 1;
+    const hasTamilItem = (answer.answer.sections || []).some((s) =>
+      (s.items || []).some((i) => (i.source || {}).text_name)
+    );
+    const hasCrossRel = (answer.answer.relationships || []).some((r) => {
+      const t = `${r.from_entity} ${r.to_entity}`.toLowerCase();
+      return r.evidence_label === "ANALOGY" || r.evidence_label === "INTERPRETATION";
+    });
+    return multiDomain || (hasCrossRel && (q.input_type === "cross_domain" || hasTamilItem));
+  }
+
+  function renderAnswer(answer) {
+    R.renderHeader(answer, $("query-header"));
+    R.renderSections(answer, $("dimension-panels"));
+    R.renderComparison(answer.answer.comparison_table, $("comparison-box"));
+
+    // Persistent notice on cross-domain / Tamil-science answers
+    const notice = $("cross-domain-notice");
+    notice.hidden = !isCrossDomain(answer);
+
+    R.renderSources(answer.sources, $("sources-list"));
+    R.renderWarnings(answer.warnings, $("warnings-list"));
+    R.renderNotFound(answer.not_found, $("notfound-list"));
+
+    showState("result");
+  }
+
+  async function run(query) {
+    showState("loading");
+    try {
+      const answer = await fetchAnswer(query);
+      renderAnswer(answer);
+    } catch (err) {
+      if (err && err.code === "NO_DOMAIN_MATCH") {
+        setError(err.code, err.message + " Supported domains: astronomy, biology, classical Tamil literature.");
+      } else {
+        setError((err && err.code) || "ERROR", (err && err.message) || "Something went wrong.");
+      }
+    }
+  }
+
+  function wire() {
+    const input = $("query-input");
+    const btn = $("analyze-btn");
+
+    btn.addEventListener("click", () => run(input.value));
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") run(input.value);
+    });
+
+    const chipBox = $("example-chips");
+    EXAMPLE_QUERIES.forEach((q) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "chip chip-example";
+      chip.textContent = q;
+      chip.addEventListener("click", () => {
+        input.value = q;
+        run(q);
+      });
+      chipBox.appendChild(chip);
+    });
+
+    $("error-retry").addEventListener("click", () => run(input.value));
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    showState("idle");
+    wire();
+  });
+})();
+
+</script>
+</body>
+</html>

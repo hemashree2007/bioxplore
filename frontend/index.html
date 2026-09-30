@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multidimensional Knowledge System</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>Multidimensional Knowledge System</h1>
+    <span id="backend-badge" class="chip chip-muted">Backend: mock</span>
+  </header>
+
+  <main class="container">
+    <section class="card search-card" aria-label="Query input">
+      <div class="search-row">
+        <input
+          id="query-input"
+          type="text"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Enter a topic, keyword, concept, sentence, question, or cross-domain query..."
+          aria-label="Query input"
+        />
+        <button id="analyze-btn" class="btn-primary">Analyze</button>
+      </div>
+      <div id="example-chips" class="chip-row" aria-label="Example queries"></div>
+    </section>
+
+    <!-- cross-domain / Tamil-science persistent notice -->
+    <aside id="cross-domain-notice" class="notice" hidden>
+      ⚠ Conceptual relationships are not scientific evidence.
+    </aside>
+
+    <!-- IDLE / EMPTY STATE -->
+    <section id="state-idle" class="card state-card">
+      <h2>Explore knowledge across four dimensions</h2>
+      <p class="muted">
+        Enter any of: topic · keyword · concept · sentence · question · comparison ·
+        relationship · temporal · cross-domain · multidimensional query.
+        Or pick an example above.
+      </p>
+    </section>
+
+    <!-- LOADING -->
+    <section id="state-loading" class="card state-card" hidden>
+      <div class="spinner" aria-hidden="true"></div>
+      <p class="muted">Analyzing query and retrieving knowledge…</p>
+    </section>
+
+    <!-- ERROR -->
+    <section id="state-error" class="card state-card error-card" hidden>
+      <h2><span id="error-code" class="badge badge-hypothesis">ERROR</span></h2>
+      <p id="error-message" class="error-message"></p>
+      <button id="error-retry" class="btn-secondary">Try again</button>
+    </section>
+
+    <!-- RESULT -->
+    <div id="state-result" hidden>
+      <section id="query-header" class="card"></section>
+      <section id="dimension-panels" class="panels"></section>
+      <div id="comparison-box"></div>
+
+      <section class="card">
+        <h3>Sources / References</h3>
+        <ol id="sources-list" class="sources-list"></ol>
+      </section>
+
+      <section class="card" id="warnings-card">
+        <h3>Warnings</h3>
+        <ul id="warnings-list"></ul>
+      </section>
+
+      <section class="card" id="notfound-card">
+        <h3>Not found in knowledge base</h3>
+        <ul id="notfound-list"></ul>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer muted">
+    Multidimensional Knowledge System — research prototype. Evidence labels:
+    FACT · EVIDENCE · INTERPRETATION · ANALOGY · HYPOTHESIS.
+  </footer>
+
+  <script src="js/mock-data.js"></script>
+  <script>window.MKS_CONFIG = { backend: "mock", endpoint: "http://127.0.0.1:8001/query" };</script>
+  <script src="js/api.js"></script>
+  <script src="js/graph.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
